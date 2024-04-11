@@ -10,7 +10,7 @@ Node *createNode(int init_count, int init_val) {
     struct Node *node = malloc( sizeof(struct Node) );
     if (node==NULL) {
         // malloc failed, get more ram at "https://downloadmoreram.com/"
-        return node;
+        return NULL;
     }
     node->count = init_count;
     node->val = init_val;
@@ -71,6 +71,10 @@ int incrval(struct Node *node, int val) {
             node = movedown(node, 1, -1, -1);
             //printf("1");
         }
+        if (node==NULL) {
+            // create node failed
+            return -1;
+        }
     }
 
     // last bit should be last node which should be leaf
@@ -82,6 +86,10 @@ int incrval(struct Node *node, int val) {
         node = movedown(node, 1, 0, val);
         node->count++;
         //printf("1");
+    }
+    if (node==NULL) {
+        // create node failed
+        return -1;
     }
     //printf("\n");
 
@@ -113,10 +121,20 @@ int fetchorderly(struct Node *node, int side, int index, int *array) {
 
 
 int bittreesort(int n, int *array) {
+    /* Sorts array
+     *
+     *  INPUT:
+     *      int n: number of elements of the array
+     *      int *array: pointer to the array that is to be sorted 
+     */
     struct Node *root = createNode(-1, -1);
 
     for (int i=0; i<n; ++i) {
-        incrval(root, array[i]);
+        if ( incrval(root, array[i])==-1 ) {
+            // incrval failed because createNode failed
+            destroyNode(root);
+            return -1;
+        }
     }
 
     int index = 0;

@@ -20,4 +20,7 @@ int incrval(struct Node *root, int val);
 int fetchorderly(struct Node *node, int side, int index, int *array);
 
 
+int bittreesort(int n, int *array);
+
+
 #endif
